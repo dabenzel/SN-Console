@@ -26,18 +26,40 @@
 
 package nschultz.console.commands.types;
 
-import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import nschultz.console.commands.core.Command;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ExitCommand implements Command {
+public class ReachCommand implements Command {
+
+    private static final Logger logger = Logger.getLogger(ReachCommand.class.getName());
 
     @Override
+    @SuppressWarnings("all")
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
-            Platform.exit();
+            try {
+                final InetAddress adr = InetAddress.getByName(arguments.get(0));
+                final long START = System.nanoTime();
+                if (adr.isReachable(10000)) {
+                    long end = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - START);
+                    display(cli, "Took ", Color.GREEN, false);
+                    display(cli, String.valueOf(end), Color.YELLOW, false);
+                    display(cli, " ms to reach the given ip.", Color.GREEN, true);
+                } else {
+                    display(cli, "Timeout.", Color.RED, true);
+                }
+            } catch (IOException ex) {
+                display(cli, "ERROR while trying to reach given IP.", Color.RED, true);
+                logger.log(Level.SEVERE, "Error while trying to reach ip", ex);
+            }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
         }
@@ -45,16 +67,16 @@ public class ExitCommand implements Command {
 
     @Override
     public String getName() {
-        return "exit";
+        return "reach";
     }
 
     @Override
     public String getInfo() {
-        return "Closes the SN Console.";
+        return "Measures the time it takes to reach a given IP.";
     }
 
     @Override
     public int getMaxArgumentCount() {
-        return 0;
+        return 1;
     }
 }

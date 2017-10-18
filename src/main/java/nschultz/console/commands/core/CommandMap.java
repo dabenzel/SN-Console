@@ -51,6 +51,7 @@ public class CommandMap {
         final Command navigateToCommand = new NavigateToCommand(workingDirectory);
         final Command readDirCommand = new ReadDirectoryCommand(workingDirectory);
         final Command ipCommand = new IPCommand();
+        final Command reachCommand = new ReachCommand();
 
         availableCommands.put(exitCommand.getName(), exitCommand);
         availableCommands.put(helpCommand.getName(), helpCommand);
@@ -62,6 +63,7 @@ public class CommandMap {
         availableCommands.put(navigateToCommand.getName(), navigateToCommand);
         availableCommands.put(readDirCommand.getName(), readDirCommand);
         availableCommands.put(ipCommand.getName(), ipCommand);
+        availableCommands.put(reachCommand.getName(), reachCommand);
     }
 
     public Command getCommand(String name) {
