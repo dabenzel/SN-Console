@@ -1,0 +1,32 @@
+ .root {
+     -fx-font-family: "Source Code Pro";
+     -fx-font-weight: bold;
+ }
+
+ .text-flow {
+     -fx-background-color: black;
+     -fx-text-fill: white;
+     -fx-font-size: 20px;
+     -fx-border-width: 2px;
+     -fx-border-color: green;
+     -fx-padding: 8px;
+     -fx-line-spacing: 4px;
+ }
+
+ .text-field {
+     -fx-background-color: black;
+     -fx-text-fill: white;
+     -fx-font-size: 20px;
+ }
+
+ .scroll-pane {
+    -fx-background-color: black;
+ }
+
+ .scroll-bar:horizontal, .scroll-bar:vertical {
+     -fx-background-color:transparent;
+ }
+
+ .scroll-pane > .corner {
+     -fx-background-color: black;
+ }
