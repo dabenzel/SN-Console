@@ -52,7 +52,8 @@ public class ReachCommand implements Command {
                     long end = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - START);
                     display(cli, "Took ", Color.GREEN, false);
                     display(cli, String.valueOf(end), Color.YELLOW, false);
-                    display(cli, " ms to reach the given ip.", Color.GREEN, true);
+                    display(cli, " ms to reach ", Color.GREEN, false);
+                    display(cli, arguments.get(0), Color.MAGENTA, true);
                 } else {
                     display(cli, "Timeout.", Color.RED, true);
                 }
