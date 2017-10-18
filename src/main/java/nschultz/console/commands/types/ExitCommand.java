@@ -39,7 +39,7 @@ public class ExitCommand implements Command {
         if (isArgumentCountValid(arguments.size())) {
             Platform.exit();
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -55,6 +55,11 @@ public class ExitCommand implements Command {
 
     @Override
     public int getMaxArgumentCount() {
+        return 0;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
         return 0;
     }
 }

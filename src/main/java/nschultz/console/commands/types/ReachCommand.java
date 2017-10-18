@@ -62,7 +62,7 @@ public class ReachCommand implements Command {
                 logger.log(Level.SEVERE, "Error while trying to reach ip", ex);
             }
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -78,6 +78,11 @@ public class ReachCommand implements Command {
 
     @Override
     public int getMaxArgumentCount() {
+        return 1;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
         return 1;
     }
 }

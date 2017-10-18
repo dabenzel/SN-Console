@@ -50,7 +50,7 @@ public class IPCommand implements Command {
                 logger.log(Level.SEVERE, "Error while fetching local ip.", ex);
             }
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -66,6 +66,11 @@ public class IPCommand implements Command {
 
     @Override
     public int getMaxArgumentCount() {
+        return 0;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
         return 0;
     }
 }

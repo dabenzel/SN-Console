@@ -40,7 +40,9 @@ public interface Command extends Displayable {
 
     int getMaxArgumentCount();
 
+    int getMinArgumentCount();
+
     default boolean isArgumentCountValid(int argumentCount) {
-        return argumentCount == getMaxArgumentCount();
+        return argumentCount <= getMaxArgumentCount() && argumentCount >= getMinArgumentCount();
     }
 }

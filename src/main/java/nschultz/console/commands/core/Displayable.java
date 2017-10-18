@@ -39,10 +39,11 @@ public interface Displayable {
         getOutputAreaChildren(cli).add(new ColoredText(text, color, newLine));
     }
 
-    default void displayInvalidArgumentCount(Window cli, String commandName, int maxArgumentCount, int argumentSize) {
-        display(cli, "To many arguments for the ", Color.RED, false);
-        display(cli, commandName, Color.MAGENTA, false);
-        display(cli, " command.\nExpected/Found: " + maxArgumentCount + "/" + argumentSize, Color.RED, true);
+    default void displayInvalidArgumentCount(Window cli, String commandName, int minArgumentCount,
+                                             int maxArgumentCount) {
+        display(cli, "The given arguments do not match the requirements for ", Color.RED, false);
+        display(cli, commandName, Color.MAGENTA, true);
+        display(cli, "Min/Max: " + minArgumentCount + "/" + maxArgumentCount, Color.RED, true);
     }
 
     private ObservableList<Node> getOutputAreaChildren(Window cli) {

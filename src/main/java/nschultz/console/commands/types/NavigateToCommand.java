@@ -56,7 +56,7 @@ public class NavigateToCommand implements Command {
                 display(cli, workingDirectory.getCurrentWorkingDirectory().toString(), Color.YELLOW, true);
             }
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -73,5 +73,10 @@ public class NavigateToCommand implements Command {
     @Override
     public int getMaxArgumentCount() {
         return 1;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
+        return 0;
     }
 }

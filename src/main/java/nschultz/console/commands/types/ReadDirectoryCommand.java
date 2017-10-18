@@ -70,7 +70,7 @@ public class ReadDirectoryCommand implements Command {
                 logger.log(Level.SEVERE, "Error while reading dir.", ex);
             }
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -86,6 +86,11 @@ public class ReadDirectoryCommand implements Command {
 
     @Override
     public int getMaxArgumentCount() {
+        return 0;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
         return 0;
     }
 }

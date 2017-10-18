@@ -40,7 +40,7 @@ public class VersionCommand implements Command {
         if (isArgumentCountValid(arguments.size())) {
             display(cli, new AppVersion().toString(), Color.GREEN, true);
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -56,6 +56,11 @@ public class VersionCommand implements Command {
 
     @Override
     public int getMaxArgumentCount() {
+        return 0;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
         return 0;
     }
 }

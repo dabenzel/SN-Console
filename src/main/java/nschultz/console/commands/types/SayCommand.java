@@ -39,7 +39,7 @@ public class SayCommand implements Command {
         if (isArgumentCountValid(arguments.size())) {
             display(cli, arguments.get(0), Color.GREEN, true);
         } else {
-            displayInvalidArgumentCount(cli, getName(), getMaxArgumentCount(), arguments.size());
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
     }
 
@@ -56,5 +56,10 @@ public class SayCommand implements Command {
     @Override
     public int getMaxArgumentCount() {
         return 1;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
+        return 0;
     }
 }
