@@ -8,7 +8,7 @@ I basically got inspired by a some really amazing open source consoles.
 Therefore I decided to give it a shot and write something that looks neat and
 can be useful aswell. I also thinks this is a really nice project to keep programming
 because you can just add new commands whenever you feel like doing so.
-Finally I think it is quiet cool to use an own written console :)
+Finally I think it is quiet cool to use an own written console!
 
 
 ## Frameworks/Tools
