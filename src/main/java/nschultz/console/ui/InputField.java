@@ -55,8 +55,16 @@ public class InputField extends TextField {
                 case ENTER:
                     handleEnterKeyPressed(cmdExecutor);
                     break;
+                case TAB:
+                    handleTabPressed();
+                    break;
             }
         });
+    }
+
+    private void handleTabPressed() {
+        setText(commandMap.autoComplete(getText()));
+        positionCaret(getText().length());
     }
 
     private void handleEnterKeyPressed(CommandExecutor cmdExecutor) {

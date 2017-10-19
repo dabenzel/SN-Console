@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 
 public class CommandMap {
 
@@ -74,5 +76,20 @@ public class CommandMap {
         final List<Command> commandList = new ArrayList<>();
         availableCommands.forEach((name, command) -> commandList.add(command));
         return commandList;
+    }
+
+    public String autoComplete(String text) {
+        if (text.isEmpty()) {
+            return text;
+        }
+
+        final AtomicReference<String> reference = new AtomicReference<>();
+        availableCommands.forEach((name, command) -> {
+            if (name.startsWith(text)) {
+                reference.set(name);
+            }
+        });
+        final String RESULT = reference.get();
+        return RESULT != null ? RESULT : text;
     }
 }
