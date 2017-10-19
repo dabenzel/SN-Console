@@ -38,8 +38,8 @@ import java.util.List;
 
 public class InputField extends TextField {
 
-    private CommandMap commandMap = new CommandMap();
-    private TextFlow outputArea;
+    private final CommandMap commandMap = new CommandMap();
+    private final TextFlow outputArea;
 
     public InputField(TextFlow outputArea) {
         this.outputArea = outputArea;
@@ -49,16 +49,23 @@ public class InputField extends TextField {
     private void handleKeyInput() {
         setOnKeyPressed(event -> {
             final CommandExecutor cmdExecutor = new CommandExecutor(commandMap, outputArea.getScene().getWindow());
-            if (event.getCode() == KeyCode.ENTER) {
-                String input = getText();
-                outputArea.getChildren().add(new ColoredText(">" + input));
+            final KeyCode keyCode = event.getCode();
 
-                final String[] splittedInput = input.split(" ");
-                final List<String> arguments = new ArrayList<>();
-                arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
-                cmdExecutor.checkAndExecute(splittedInput[0], arguments);
-                clear();
+            switch (keyCode) {
+                case ENTER:
+                    handleEnterKeyPressed(cmdExecutor);
+                    break;
             }
         });
+    }
+
+    private void handleEnterKeyPressed(CommandExecutor cmdExecutor) {
+        String input = getText();
+        outputArea.getChildren().add(new ColoredText(">" + input));
+        final String[] splittedInput = input.split(" ");
+        final List<String> arguments = new ArrayList<>();
+        arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
+        cmdExecutor.checkAndExecute(splittedInput[0], arguments);
+        clear();
     }
 }
