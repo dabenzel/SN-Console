@@ -29,6 +29,7 @@ package nschultz.console.ui;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.TextFlow;
+import nschultz.console.commands.core.AutoCompleter;
 import nschultz.console.commands.core.CommandExecutor;
 import nschultz.console.commands.core.CommandMap;
 
@@ -63,7 +64,7 @@ public class InputField extends TextField {
     }
 
     private void handleTabPressed() {
-        setText(commandMap.autoComplete(getText()));
+        setText(new AutoCompleter(commandMap.getAllNames()).autoComplete(getText()));
         positionCaret(getText().length());
     }
 

@@ -44,7 +44,7 @@ public class HelpCommand implements Command {
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
-            final List<Command> commands = commandMap.toList();
+            final List<Command> commands = commandMap.getAllCommands();
             for (Command cmd : commands) {
                 display(cli, cmd.getName() + ": ", Color.MAGENTA, false);
                 display(cli, cmd.getInfo(), Color.GREEN, true);
