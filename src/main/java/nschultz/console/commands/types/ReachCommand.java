@@ -44,6 +44,7 @@ public class ReachCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(ReachCommand.class.getName());
 
+    private static final int DEFAULT_TIMEOUT_MILLIS = 10000;
     private static final int ADDRESS_PARM_INDEX = 0;
     private static final int LOOP_PARM_INDEX = 1;
 
@@ -92,7 +93,7 @@ public class ReachCommand implements Command {
         for (int i = 0; i < loopCount; i++) {
             final long START = System.nanoTime();
             try {
-                if (adr.isReachable(10000)) {
+                if (adr.isReachable(DEFAULT_TIMEOUT_MILLIS)) {
                     long end = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - START);
                     displayReachTime(arguments, cli, end);
                 } else {
@@ -102,7 +103,12 @@ public class ReachCommand implements Command {
                 displayErrorOccurredWhileConnecting(cli);
                 logger.log(Level.SEVERE, "Error while trying to reach ip", ex);
             }
-            sleep(cli);
+            try {
+                sleepMillis(1000);
+            } catch (InterruptedException ex) {
+                displayErrorOccurredWhileConnecting(cli);
+                logger.log(Level.SEVERE, "Thread got interrupted", ex);
+            }
         }
     }
 
@@ -115,13 +121,8 @@ public class ReachCommand implements Command {
         });
     }
 
-    private void sleep(Window cli) {
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException ex) {
-            displayErrorOccurredWhileConnecting(cli);
-            logger.log(Level.SEVERE, "Thread got interrupted", ex);
-        }
+    private void sleepMillis(int millis) throws InterruptedException {
+        TimeUnit.MILLISECONDS.sleep(millis);
     }
 
     private void displayErrorOccurredWhileConnecting(Window cli) {
