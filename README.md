@@ -17,6 +17,7 @@ This application is programmed in Java using the JavaFx GUI library.
 I know there are some really great open source components especially for displaying text. And I 
 also know the text components in JavaFx are limited.
 But for now I'll try to see how far one can get with only using the standard JavaFx components.
+> Please consider that JDK 9 is used
 
 
 ## License
