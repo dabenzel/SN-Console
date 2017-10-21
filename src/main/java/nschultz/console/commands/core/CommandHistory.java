@@ -45,7 +45,7 @@ public class CommandHistory {
     }
 
     public void add(String text) {
-        if (history.contains(text)) {
+        if (history.contains(text) || text.isEmpty()) {
             return;
         }
         if (history.size() >= MAX_HISTORY_SIZE) {
