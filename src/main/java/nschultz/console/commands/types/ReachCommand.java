@@ -62,6 +62,7 @@ public class ReachCommand implements Command {
                     } catch (NumberFormatException ex) {
                         display(cli, "Bad second argument ", Color.RED, false);
                         display(cli, arguments.get(LOOP_PARM_INDEX), Color.MAGENTA, true);
+                        return;
                     }
                 }
 
