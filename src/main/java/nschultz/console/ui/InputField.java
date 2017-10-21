@@ -2,7 +2,7 @@
  *
  * The MIT License
  *
- * Copyright 2017 Niklas.
+ * Copyright 2017 Niklas Schultz.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.TextFlow;
 import nschultz.console.commands.core.AutoCompleter;
 import nschultz.console.commands.core.CommandExecutor;
+import nschultz.console.commands.core.CommandHistory;
 import nschultz.console.commands.core.CommandMap;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ import java.util.List;
 public class InputField extends TextField {
 
     private final CommandMap commandMap = new CommandMap();
+    private final int MAX_HISTORY_SIZE = 10;
+    private final CommandHistory commandHistory = new CommandHistory(MAX_HISTORY_SIZE);
     private final TextFlow outputArea;
 
     public InputField(TextFlow outputArea) {
@@ -56,6 +59,12 @@ public class InputField extends TextField {
                 case ENTER:
                     handleEnterKeyPressed(cmdExecutor);
                     break;
+                case UP:
+                    handleUpKeyPressed();
+                    break;
+                case DOWN:
+                    handleDownKeyPressed();
+                    break;
                 case TAB:
                     handleTabPressed();
                     break;
@@ -63,18 +72,33 @@ public class InputField extends TextField {
         });
     }
 
+    private void handleUpKeyPressed() {
+        setText(commandHistory.getNext());
+        moveCaretToLastPosition();
+    }
+
+    private void handleDownKeyPressed() {
+        setText(commandHistory.getPrevious());
+        moveCaretToLastPosition();
+    }
+
     private void handleTabPressed() {
         setText(new AutoCompleter(commandMap.getAllNames()).autoComplete(getText()));
-        positionCaret(getText().length());
+        moveCaretToLastPosition();
     }
 
     private void handleEnterKeyPressed(CommandExecutor cmdExecutor) {
         String input = getText();
+        commandHistory.add(input);
         outputArea.getChildren().add(new ColoredText(">" + input));
         final String[] splittedInput = input.split(" ");
         final List<String> arguments = new ArrayList<>();
         arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
         cmdExecutor.checkAndExecute(splittedInput[0], arguments);
         clear();
+    }
+
+    private void moveCaretToLastPosition() {
+        positionCaret(getText().length());
     }
 }
