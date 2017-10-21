@@ -44,6 +44,9 @@ public class ReachCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(ReachCommand.class.getName());
 
+    private static final int ADDRESS_PARM_INDEX = 0;
+    private static final int LOOP_PARM_INDEX = 1;
+
     private int loopCount = 1;
 
     @Override
@@ -51,14 +54,14 @@ public class ReachCommand implements Command {
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
             try {
-                final InetAddress adr = InetAddress.getByName(arguments.get(0));
+                final InetAddress adr = InetAddress.getByName(arguments.get(ADDRESS_PARM_INDEX));
 
                 if (arguments.size() == getMaxArgumentCount()) {
                     try {
-                        loopCount = Integer.parseInt(arguments.get(1));
+                        loopCount = Integer.parseInt(arguments.get(LOOP_PARM_INDEX));
                     } catch (NumberFormatException ex) {
                         display(cli, "Bad second argument ", Color.RED, false);
-                        display(cli, arguments.get(1), Color.MAGENTA, true);
+                        display(cli, arguments.get(LOOP_PARM_INDEX), Color.MAGENTA, true);
                     }
                 }
 
