@@ -45,6 +45,8 @@ public class InputField extends TextField {
     private final CommandHistory commandHistory = new CommandHistory(MAX_HISTORY_SIZE);
     private final TextFlow outputArea;
 
+    private boolean isUsable = true;
+
     public InputField(TextFlow outputArea) {
         this.outputArea = outputArea;
         handleKeyInput();
@@ -72,14 +74,23 @@ public class InputField extends TextField {
         });
     }
 
+    public void setUsable(boolean isUsable) {
+        this.isUsable = isUsable;
+        setEditable(isUsable);
+    }
+
     private void handleUpKeyPressed() {
-        setText(commandHistory.getNext());
-        moveCaretToLastPosition();
+        if (isUsable) {
+            setText(commandHistory.getNext());
+            moveCaretToLastPosition();
+        }
     }
 
     private void handleDownKeyPressed() {
-        setText(commandHistory.getPrevious());
-        moveCaretToLastPosition();
+        if (isUsable) {
+            setText(commandHistory.getPrevious());
+            moveCaretToLastPosition();
+        }
     }
 
     private void handleTabPressed() {
@@ -88,14 +99,16 @@ public class InputField extends TextField {
     }
 
     private void handleEnterKeyPressed(CommandExecutor cmdExecutor) {
-        String input = getText();
-        commandHistory.add(input);
-        outputArea.getChildren().add(new ColoredText(">" + input));
-        final String[] splittedInput = input.split(" ");
-        final List<String> arguments = new ArrayList<>();
-        arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
-        cmdExecutor.checkAndExecute(splittedInput[0], arguments);
-        clear();
+        if (isUsable) {
+            String input = getText();
+            commandHistory.add(input);
+            outputArea.getChildren().add(new ColoredText(">" + input));
+            final String[] splittedInput = input.split(" ");
+            final List<String> arguments = new ArrayList<>();
+            arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
+            cmdExecutor.checkAndExecute(splittedInput[0], arguments);
+            clear();
+        }
     }
 
     private void moveCaretToLastPosition() {

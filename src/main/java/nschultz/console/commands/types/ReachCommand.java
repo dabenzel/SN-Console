@@ -26,9 +26,12 @@
 
 package nschultz.console.commands.types;
 
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import nschultz.console.commands.core.Command;
+import nschultz.console.ui.InputField;
+import nschultz.console.ui.MainScene;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -41,22 +44,33 @@ public class ReachCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(ReachCommand.class.getName());
 
+    private int loopCount = 1;
+
     @Override
     @SuppressWarnings("all")
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
             try {
                 final InetAddress adr = InetAddress.getByName(arguments.get(0));
-                final long START = System.nanoTime();
-                if (adr.isReachable(10000)) {
-                    long end = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - START);
-                    display(cli, "Took ", Color.GREEN, false);
-                    display(cli, String.valueOf(end), Color.YELLOW, false);
-                    display(cli, " ms to reach ", Color.GREEN, false);
-                    display(cli, arguments.get(0), Color.MAGENTA, true);
-                } else {
-                    display(cli, "Timeout.", Color.RED, true);
+
+                if (arguments.size() == getMaxArgumentCount()) {
+                    try {
+                        loopCount = Integer.parseInt(arguments.get(1));
+                    } catch (NumberFormatException ex) {
+                        display(cli, "Bad second argument ", Color.RED, false);
+                        display(cli, arguments.get(1), Color.MAGENTA, true);
+                    }
                 }
+
+                final Thread thread = new Thread(() -> {
+                    InputField inputField = (InputField) ((MainScene) cli.getScene()).getInputField();
+                    inputField.setUsable(false);
+                    reachIP(arguments, cli, adr);
+                    inputField.setUsable(true);
+                });
+                thread.setDaemon(true);
+                thread.start();
+
             } catch (IOException ex) {
                 display(cli, "ERROR while trying to reach given IP.", Color.RED, true);
                 logger.log(Level.SEVERE, "Error while trying to reach ip", ex);
@@ -64,6 +78,46 @@ public class ReachCommand implements Command {
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
+    }
+
+    private void reachIP(List<String> arguments, Window cli, InetAddress adr) {
+        for (int i = 0; i < loopCount; i++) {
+            final long START = System.nanoTime();
+            try {
+                if (adr.isReachable(10000)) {
+                    long end = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - START);
+                    displayReachTime(arguments, cli, end);
+                } else {
+                    Platform.runLater(() -> display(cli, "Timeout.", Color.RED, true));
+                }
+            } catch (IOException ex) {
+                displayErrorOccurredWhileConnecting(cli);
+                logger.log(Level.SEVERE, "Error while trying to reach ip", ex);
+            }
+            sleep(cli);
+        }
+    }
+
+    private void displayReachTime(List<String> arguments, Window cli, long end) {
+        Platform.runLater(() -> {
+            display(cli, "Took ", Color.GREEN, false);
+            display(cli, String.valueOf(end), Color.YELLOW, false);
+            display(cli, " ms to reach ", Color.GREEN, false);
+            display(cli, arguments.get(0), Color.MAGENTA, true);
+        });
+    }
+
+    private void sleep(Window cli) {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException ex) {
+            displayErrorOccurredWhileConnecting(cli);
+            logger.log(Level.SEVERE, "Thread got interrupted", ex);
+        }
+    }
+
+    private void displayErrorOccurredWhileConnecting(Window cli) {
+        Platform.runLater(() -> display(cli, "ERROR while trying to reach given IP.", Color.RED, true));
     }
 
     @Override
@@ -78,7 +132,7 @@ public class ReachCommand implements Command {
 
     @Override
     public int getMaxArgumentCount() {
-        return 1;
+        return 2;
     }
 
     @Override
