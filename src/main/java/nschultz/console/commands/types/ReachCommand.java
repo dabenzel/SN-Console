@@ -66,14 +66,7 @@ public class ReachCommand implements Command {
                     }
                 }
 
-                final Thread thread = new Thread(() -> {
-                    InputField inputField = (InputField) ((MainScene) cli.getScene()).getInputField();
-                    inputField.setUsable(false);
-                    reachIP(arguments, cli, adr);
-                    inputField.setUsable(true);
-                });
-                thread.setDaemon(true);
-                thread.start();
+                setupReachThread(arguments, cli, adr);
 
             } catch (IOException ex) {
                 display(cli, "ERROR while trying to reach given IP.", Color.RED, true);
@@ -82,6 +75,17 @@ public class ReachCommand implements Command {
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
+    }
+
+    private void setupReachThread(List<String> arguments, Window cli, InetAddress adr) {
+        final Thread thread = new Thread(() -> {
+            InputField inputField = (InputField) ((MainScene) cli.getScene()).getInputField();
+            inputField.setUsable(false);
+            reachIP(arguments, cli, adr);
+            inputField.setUsable(true);
+        }, "Reach-Thread");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void reachIP(List<String> arguments, Window cli, InetAddress adr) {
