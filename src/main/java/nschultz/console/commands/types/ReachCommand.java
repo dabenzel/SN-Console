@@ -106,10 +106,15 @@ public class ReachCommand implements Command {
             try {
                 sleepMillis(1000);
             } catch (InterruptedException ex) {
-                displayErrorOccurredWhileConnecting(cli);
-                logger.log(Level.SEVERE, "Thread got interrupted", ex);
+                handleInterruptedException(cli, ex);
             }
         }
+    }
+
+    private void handleInterruptedException(Window cli, InterruptedException ex) {
+        displayErrorOccurredWhileConnecting(cli);
+        logger.log(Level.SEVERE, "Thread got interrupted", ex);
+        Thread.currentThread().interrupt();
     }
 
     private void displayReachTime(List<String> arguments, Window cli, long end) {
