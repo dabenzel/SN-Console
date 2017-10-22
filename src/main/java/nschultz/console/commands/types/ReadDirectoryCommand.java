@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,15 +56,11 @@ public class ReadDirectoryCommand implements Command {
                 try (final DirectoryStream<Path> dirStream = Files.newDirectoryStream(
                         workingDirectory.getCurrentWorkingDirectory())) {
 
-                    dirStream.forEach(name -> {
-                        if (Files.isDirectory(name)) {
-                            display(cli, "- " + name.getFileName().toString(), Color.GREEN, false);
-                            display(cli, " (DIR)", Color.YELLOW, true);
-                        } else {
-                            display(cli, "- " + name.getFileName().toString(), Color.GREEN, false);
-                            display(cli, " (FILE)", Color.YELLOW, true);
-                        }
-                    });
+                    final List<Path> files = new ArrayList<>();
+                    dirStream.forEach(files::add);
+
+                    displayFileCount(cli, files);
+                    displayFiles(cli, files);
                 }
             } catch (IOException ex) {
                 display(cli, "Error: " + ex.getMessage(), Color.RED, true);
@@ -72,6 +69,24 @@ public class ReadDirectoryCommand implements Command {
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
+    }
+
+    private void displayFiles(Window cli, List<Path> files) {
+        for (Path file : files) {
+            if (Files.isDirectory(file)) {
+                display(cli, "- " + file.getFileName().toString(), Color.GREEN, false);
+                display(cli, " (DIR)", Color.YELLOW, true);
+            } else {
+                display(cli, "- " + file.getFileName().toString(), Color.GREEN, false);
+                display(cli, " (FILE)", Color.YELLOW, true);
+            }
+        }
+    }
+
+    private void displayFileCount(Window cli, List<Path> files) {
+        display(cli, "Total of ", Color.GREEN, false);
+        display(cli, String.valueOf(files.size()), Color.YELLOW, false);
+        display(cli, " files counted: ", Color.GREEN, true);
     }
 
     @Override
