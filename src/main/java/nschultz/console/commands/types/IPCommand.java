@@ -39,12 +39,20 @@ import java.util.logging.Logger;
 public class IPCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(IPCommand.class.getName());
+    private static final String LOCAL_HOST = "127.0.0.1";
 
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
             try {
-                display(cli, InetAddress.getLocalHost().getHostAddress(), Color.GREEN, true);
+                final String HOST_ADDRESS = InetAddress.getLocalHost().getHostAddress();
+                if (HOST_ADDRESS.equals(LOCAL_HOST)) {
+                    display(cli, "The execution of this command returned ", Color.ORANGE, false);
+                    display(cli, LOCAL_HOST + " (localhost).", Color.GREEN, true);
+                    display(cli, "That could indicate that there is no network connection right now.", Color.ORANGE, true);
+                } else {
+                    display(cli, HOST_ADDRESS, Color.GREEN, true);
+                }
             } catch (UnknownHostException ex) {
                 display(cli, "Error: " + ex.getMessage(), Color.RED, true);
                 logger.log(Level.SEVERE, "Error while fetching local ip.", ex);

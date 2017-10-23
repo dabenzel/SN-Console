@@ -100,7 +100,7 @@ public class ReachCommand implements Command {
                     Platform.runLater(() -> display(cli, "Timeout.", Color.RED, true));
                 }
             } catch (IOException ex) {
-                displayErrorOccurredWhileConnecting(cli);
+                displayErrorOccurredWhileConnecting(cli, ex);
                 logger.log(Level.SEVERE, "Error while trying to reach ip", ex);
             }
             try {
@@ -112,7 +112,7 @@ public class ReachCommand implements Command {
     }
 
     private void handleInterruptedException(Window cli, InterruptedException ex) {
-        displayErrorOccurredWhileConnecting(cli);
+        displayErrorOccurredWhileConnecting(cli, ex);
         logger.log(Level.SEVERE, "Thread got interrupted", ex);
         Thread.currentThread().interrupt();
     }
@@ -130,8 +130,8 @@ public class ReachCommand implements Command {
         TimeUnit.MILLISECONDS.sleep(millis);
     }
 
-    private void displayErrorOccurredWhileConnecting(Window cli) {
-        Platform.runLater(() -> display(cli, "ERROR while trying to reach given IP.", Color.RED, true));
+    private void displayErrorOccurredWhileConnecting(Window cli, Exception ex) {
+        Platform.runLater(() -> display(cli, "ERROR while trying to reach given IP: " + ex.getMessage(), Color.RED, true));
     }
 
     @Override
