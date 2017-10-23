@@ -33,12 +33,32 @@ import javafx.stage.Window;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.MainScene;
 
+/**
+ * This interface provides default implementations to output text to the command line interface.
+ */
 public interface Displayable {
 
+    /**
+     * Displays a {@code {@link ColoredText}} to the command line interface.
+     *
+     * @param cli     the command line interface
+     * @param text    the text to display
+     * @param color   the color of the text
+     * @param newLine true if a new line should be added ('\n'); false otherwise
+     */
     default void display(Window cli, String text, Color color, boolean newLine) {
         getOutputAreaChildren(cli).add(new ColoredText(text, color, newLine));
     }
 
+    /**
+     * Displays a default {@code {@link ColoredText}} to the command line interface in case the given arguments are
+     * either to few or to many.
+     *
+     * @param cli              the command line interface
+     * @param commandName      the name of the command
+     * @param minArgumentCount the maximum argument count
+     * @param maxArgumentCount the minimum argument count
+     */
     default void displayInvalidArgumentCount(Window cli, String commandName, int minArgumentCount,
                                              int maxArgumentCount) {
         display(cli, "The given arguments do not match the requirements for ", Color.RED, false);
@@ -46,6 +66,13 @@ public interface Displayable {
         display(cli, "Min/Max: " + minArgumentCount + "/" + maxArgumentCount, Color.RED, true);
     }
 
+    /**
+     * Helper method for this interface to get the current children of the
+     * {@code {@link nschultz.console.ui.OutputArea}}.
+     *
+     * @param cli the command line interface
+     * @return the children of the {@code {@link nschultz.console.ui.OutputArea }}
+     */
     private ObservableList<Node> getOutputAreaChildren(Window cli) {
         return ((MainScene) cli.getScene()).getOutputArea().getChildren();
     }
