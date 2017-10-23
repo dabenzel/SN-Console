@@ -55,7 +55,7 @@ public class CommandMap {
         final Command createdDirCommand = new CreateDirectoryCommand(workingDirectory);
         final Command dateTimeCommand = new DateTimeCommand();
         final Command resolutionCommand = new ResolutionCommand();
-        final Command browseCommand = new BrowseCommand();
+        final Command browseCommand = new OpenCommand();
 
         availableCommands.put(exitCommand.getName(), exitCommand);
         availableCommands.put(helpCommand.getName(), helpCommand);

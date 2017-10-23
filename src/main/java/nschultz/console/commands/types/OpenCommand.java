@@ -32,7 +32,7 @@ import nschultz.console.commands.core.Command;
 
 import java.util.List;
 
-public class BrowseCommand implements Command {
+public class OpenCommand implements Command {
 
     private static final int URL_PARM_INDEX = 0;
 
@@ -49,12 +49,12 @@ public class BrowseCommand implements Command {
 
     @Override
     public String getName() {
-        return "browse";
+        return "open";
     }
 
     @Override
     public String getInfo() {
-        return "Opens the default browser with the specified URI.";
+        return "Opens the specified URI with the default program.";
     }
 
     @Override
