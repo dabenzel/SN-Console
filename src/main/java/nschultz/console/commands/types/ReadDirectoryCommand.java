@@ -96,7 +96,7 @@ public class ReadDirectoryCommand implements Command {
 
     @Override
     public String getInfo() {
-        return "Displays the files in the current directory.";
+        return "Displays the contents in the current directory.";
     }
 
     @Override
