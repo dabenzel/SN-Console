@@ -23,27 +23,47 @@
  * THE SOFTWARE.
  *
  */
-package nschultz.console;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
-import nschultz.console.ui.MainScene;
-import nschultz.console.util.AppVersion;
+package nschultz.console.commands.types;
 
-public class SNConsoleApp extends Application {
+import javafx.application.HostServices;
+import javafx.stage.Window;
+import nschultz.console.commands.core.Command;
 
-    public static final String TITLE = "SN Console " + new AppVersion();
+import java.util.List;
+
+public class BrowseCommand implements Command {
+
+    private static final int URL_PARM_INDEX = 0;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle(TITLE);
-        primaryStage.setScene(new MainScene());
-        primaryStage.setOpacity(0.90);
-        primaryStage.getProperties().put("hostservices", getHostServices());
-        primaryStage.show();
+    public void execute(List<String> arguments, Window cli) {
+        if (isArgumentCountValid(arguments.size())) {
+            String uri = arguments.get(URL_PARM_INDEX);
+            HostServices hostServices = (HostServices) cli.getScene().getWindow().getProperties().get("hostservices");
+            hostServices.showDocument(uri);
+        } else {
+            displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
+        }
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    @Override
+    public String getName() {
+        return "browse";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Opens the default browser with the specified URI.";
+    }
+
+    @Override
+    public int getMaxArgumentCount() {
+        return 1;
+    }
+
+    @Override
+    public int getMinArgumentCount() {
+        return 1;
     }
 }
