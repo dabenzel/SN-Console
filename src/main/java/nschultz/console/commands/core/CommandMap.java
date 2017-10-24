@@ -56,6 +56,7 @@ public class CommandMap {
         final Command dateTimeCommand = new DateTimeCommand();
         final Command resolutionCommand = new ResolutionCommand();
         final Command browseCommand = new OpenCommand();
+        final Command userNameCommand = new UserNameCommand();
 
         availableCommands.put(exitCommand.getName(), exitCommand);
         availableCommands.put(helpCommand.getName(), helpCommand);
@@ -72,6 +73,7 @@ public class CommandMap {
         availableCommands.put(dateTimeCommand.getName(), dateTimeCommand);
         availableCommands.put(resolutionCommand.getName(), resolutionCommand);
         availableCommands.put(browseCommand.getName(), browseCommand);
+        availableCommands.put(userNameCommand.getName(), userNameCommand);
     }
 
     public Command getCommand(String name) {
