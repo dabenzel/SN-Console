@@ -50,9 +50,13 @@ public class OutputArea extends TextFlow {
 
     private void addStartupText() {
         getChildren().add(new ColoredText(SNConsoleApp.TITLE, Color.GREEN, true));
+        getChildren().add(new ColoredText("", Color.GREEN, true));
         getChildren().add(new ColoredText("Type ", Color.GREEN, false));
         getChildren().add(new ColoredText("help ", Color.MAGENTA, false));
         getChildren().add(new ColoredText("for a list of available commands.", Color.GREEN, true));
+        getChildren().add(new ColoredText("Use ", Color.GREEN, false));
+        getChildren().add(new ColoredText("help <command name> ", Color.MAGENTA, false));
+        getChildren().add(new ColoredText("to get detailed information about a specific command.", Color.GREEN, true));
     }
 
     private void addListChangeListener() {
