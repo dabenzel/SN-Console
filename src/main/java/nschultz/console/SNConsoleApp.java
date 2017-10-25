@@ -26,9 +26,11 @@
 package nschultz.console;
 
 import javafx.application.Application;
+import javafx.geometry.Dimension2D;
 import javafx.stage.Stage;
 import nschultz.console.ui.MainScene;
 import nschultz.console.util.AppVersion;
+import nschultz.console.util.ResolutionHandler;
 
 public class SNConsoleApp extends Application {
 
@@ -37,10 +39,15 @@ public class SNConsoleApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(TITLE);
-        primaryStage.setScene(new MainScene());
+        Dimension2D startupResolution = fetchStartupResolution();
+        primaryStage.setScene(new MainScene(startupResolution.getWidth(), startupResolution.getHeight()));
         primaryStage.setOpacity(0.90);
         primaryStage.getProperties().put("hostservices", getHostServices());
         primaryStage.show();
+    }
+
+    private Dimension2D fetchStartupResolution() {
+        return new ResolutionHandler().determineStartupApplicationResolution();
     }
 
     public static void main(String[] args) {

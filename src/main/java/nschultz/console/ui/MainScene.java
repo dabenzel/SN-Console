@@ -36,13 +36,11 @@ import javafx.scene.text.TextFlow;
 
 public class MainScene extends Scene {
 
-    private static final int WIDTH = 820;
-    private static final int HEIGHT = 480;
     private static TextFlow outputArea;
     private static TextField inputField;
 
-    public MainScene() {
-        super(constructContent(), WIDTH, HEIGHT);
+    public MainScene(double width, double height) {
+        super(constructContent(), width, height);
         applyCSS();
     }
 

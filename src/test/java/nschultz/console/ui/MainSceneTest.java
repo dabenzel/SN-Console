@@ -45,7 +45,7 @@ public class MainSceneTest {
 
     @Test
     public void shouldHaveLoadedCSSFileAfterInitializing() {
-        final MainScene scene = new MainScene();
+        final MainScene scene = new MainScene(800, 600);
         assertEquals(1, scene.getStylesheets().size());
     }
 }
