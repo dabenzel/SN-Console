@@ -32,7 +32,7 @@ public final class WorkingDirectory {
 
     private Path currentWorkingDirectory;
 
-    public WorkingDirectory(Path currentWorkingDirectory) {
+    WorkingDirectory(Path currentWorkingDirectory) {
         this.currentWorkingDirectory = currentWorkingDirectory;
     }
 
