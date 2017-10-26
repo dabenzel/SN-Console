@@ -28,6 +28,7 @@ package nschultz.console.commands.core;
 
 import nschultz.console.commands.types.*;
 import nschultz.console.io.WorkingDirectory;
+import nschultz.console.io.WorkingDirectoryProvider;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,10 +38,11 @@ import java.util.TreeMap;
 
 public class CommandMap {
 
-    private static final Map<String, Command> availableCommands = new TreeMap<>();
-    private static final WorkingDirectory workingDirectory = new WorkingDirectory(Paths.get("").toAbsolutePath());
+    private final Map<String, Command> availableCommands = new TreeMap<>();
 
     public CommandMap() {
+        final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
+
         final Command exitCommand = new ExitCommand();
         final Command helpCommand = new HelpCommand(this);
         final Command sayCommand = new SayCommand();

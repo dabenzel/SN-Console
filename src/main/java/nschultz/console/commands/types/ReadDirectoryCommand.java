@@ -54,7 +54,7 @@ public class ReadDirectoryCommand implements Command {
         if (isArgumentCountValid(arguments.size())) {
             try {
                 try (final DirectoryStream<Path> dirStream = Files.newDirectoryStream(
-                        workingDirectory.getCurrentWorkingDirectory())) {
+                        workingDirectory.getPath())) {
 
                     final List<Path> files = new ArrayList<>();
                     dirStream.forEach(files::add);

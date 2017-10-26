@@ -26,21 +26,16 @@
 
 package nschultz.console.io;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public final class WorkingDirectory {
+public class WorkingDirectoryProvider {
 
-    private Path currentWorkingDirectory;
+    private static final WorkingDirectory workingDirectory = new WorkingDirectory(Paths.get("").toAbsolutePath());
 
-    public WorkingDirectory(Path currentWorkingDirectory) {
-        this.currentWorkingDirectory = currentWorkingDirectory;
+    private WorkingDirectoryProvider() {
     }
 
-    public void setPath(Path currentWorkingDirectory) {
-        this.currentWorkingDirectory = currentWorkingDirectory;
-    }
-
-    public Path getPath() {
-        return currentWorkingDirectory;
+    public static WorkingDirectory getWorkingDirectory() {
+        return workingDirectory;
     }
 }

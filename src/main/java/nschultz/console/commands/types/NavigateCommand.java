@@ -44,7 +44,7 @@ public class NavigateCommand implements Command {
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
-            display(cli, workingDirectory.getCurrentWorkingDirectory().toString(), Color.GREEN, true);
+            display(cli, workingDirectory.getPath().toString(), Color.GREEN, true);
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }

@@ -29,9 +29,15 @@ package nschultz.console.commands.core;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
+import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.MainScene;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandExecutor {
@@ -44,17 +50,52 @@ public class CommandExecutor {
         this.cli = cli;
     }
 
-    public void checkAndExecute(String name, List<String> arguments) {
-        final Command cmd = commandMap.getCommand(name);
+    public void checkAndExecute(String rawInput) {
+        final String[] splittedInput = rawInput.split(" ");
+        final List<String> arguments = new ArrayList<>();
+        arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
+        final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
+        final Command cmd = commandMap.getCommand(splittedInput[0]);
+
         if (cmd != null) {
             cmd.execute(arguments, cli);
         } else {
-            if (!name.isEmpty()) {
-                final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
-                outputArea.getChildren().add(new ColoredText("The command ", Color.RED, false));
-                outputArea.getChildren().add(new ColoredText(name, Color.MAGENTA, false));
-                outputArea.getChildren().add(new ColoredText(" could not be found.", Color.RED, true));
+            try {
+                tryExecuteSystemCommand(rawInput, outputArea);
+            } catch (IOException ignore) {
+                if (!rawInput.isEmpty()) {
+                    outputArea.getChildren().add(new ColoredText("The command ", Color.RED, false));
+                    outputArea.getChildren().add(new ColoredText(rawInput, Color.MAGENTA, false));
+                    outputArea.getChildren().add(new ColoredText(" could not be found.", Color.RED, true));
+                }
             }
+        }
+    }
+
+    private void tryExecuteSystemCommand(String rawInput, TextFlow outputArea) throws IOException {
+        if (rawInput.isEmpty()) {
+            return;
+        }
+
+        File workingDir = WorkingDirectoryProvider.getWorkingDirectory().getPath().toFile();
+        Process process = Runtime.getRuntime().exec(rawInput, null, workingDir);
+        InputStream inp = process.getInputStream();
+        InputStream err = process.getErrorStream();
+
+        for (; ; ) {
+            byte[] buffer = new byte[8192];
+            if (inp.read(buffer) == -1) {
+                break;
+            }
+            outputArea.getChildren().add(new ColoredText(new String(buffer), Color.CYAN, true));
+        }
+
+        for (; ; ) {
+            byte[] buffer = new byte[8192];
+            if (err.read(buffer) == -1) {
+                break;
+            }
+            outputArea.getChildren().add(new ColoredText(new String(buffer), Color.CYAN, true));
         }
     }
 }

@@ -54,7 +54,7 @@ public class CreateDirectoryCommand implements Command {
 
             try {
                 final String DIR_NAME = arguments.get(DIRECTORY_PARM_INDEX);
-                Path newDir = Files.createDirectory(workingDirectory.getCurrentWorkingDirectory().resolve(DIR_NAME));
+                Path newDir = Files.createDirectory(workingDirectory.getPath().resolve(DIR_NAME));
                 display(cli, "Created directory ", Color.GREEN, false);
                 display(cli, newDir.getFileName().toString(), Color.MAGENTA, false);
                 display(cli, " successfully", Color.GREEN, true);

@@ -51,9 +51,9 @@ public class NavigateToCommand implements Command {
             if (Files.notExists(dir)) {
                 display(cli, "Directory does not exist.", Color.RED, true);
             } else {
-                workingDirectory.setCurrentWorkingDirectory(dir);
+                workingDirectory.setPath(dir);
                 display(cli, "Navigated to ", Color.GREEN, false);
-                display(cli, workingDirectory.getCurrentWorkingDirectory().toString(), Color.YELLOW, true);
+                display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
             }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());

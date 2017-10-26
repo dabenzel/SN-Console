@@ -34,6 +34,8 @@ import nschultz.console.commands.core.CommandExecutor;
 import nschultz.console.commands.core.CommandHistory;
 import nschultz.console.commands.core.CommandMap;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,10 +105,7 @@ public class InputField extends TextField {
             String input = getText();
             commandHistory.add(input);
             outputArea.getChildren().add(new ColoredText(">" + input));
-            final String[] splittedInput = input.split(" ");
-            final List<String> arguments = new ArrayList<>();
-            arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));
-            cmdExecutor.checkAndExecute(splittedInput[0], arguments);
+            cmdExecutor.checkAndExecute(input);
             clear();
         }
     }
