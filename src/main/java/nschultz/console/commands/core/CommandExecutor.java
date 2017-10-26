@@ -95,7 +95,7 @@ public class CommandExecutor {
             if (err.read(buffer) == -1) {
                 break;
             }
-            outputArea.getChildren().add(new ColoredText(new String(buffer), Color.CYAN, true));
+            outputArea.getChildren().add(new ColoredText(new String(buffer), Color.RED, true));
         }
     }
 }
