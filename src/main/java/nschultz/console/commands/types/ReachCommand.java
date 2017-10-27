@@ -54,6 +54,7 @@ public class ReachCommand implements Command {
     @SuppressWarnings("all")
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
+            resetLoopCount();
             try {
                 final InetAddress adr = InetAddress.getByName(arguments.get(ADDRESS_PARM_INDEX));
 
@@ -76,6 +77,10 @@ public class ReachCommand implements Command {
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
+    }
+
+    private void resetLoopCount() {
+        loopCount = 1;
     }
 
     private void setupReachThread(List<String> arguments, Window cli, InetAddress adr) {
