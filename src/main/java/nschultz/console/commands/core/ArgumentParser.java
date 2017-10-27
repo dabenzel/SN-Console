@@ -38,7 +38,11 @@ public class ArgumentParser {
         this.input = text;
     }
 
-    public List<String> parse() {
+    public String fetchCommandName() {
+        return input.split(" ")[0];
+    }
+
+    public List<String> fetchArguments() {
         final String[] splittedInput = input.split(" ");
         final List<String> arguments = new ArrayList<>();
         arguments.addAll(Arrays.asList(splittedInput).subList(1, splittedInput.length));

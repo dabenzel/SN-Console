@@ -46,9 +46,10 @@ public class CommandExecutor {
     }
 
     public void checkAndExecute(String rawInput) {
-        final List<String> arguments = new ArgumentParser(rawInput).parse();
+        final ArgumentParser argumentParser = new ArgumentParser(rawInput);
+        final List<String> arguments = argumentParser.fetchArguments();
         final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
-        final Command cmd = commandMap.getCommand(rawInput.split(" ")[0]);
+        final Command cmd = commandMap.getCommand(argumentParser.fetchCommandName());
 
         if (cmd != null) {
             cmd.execute(arguments, cli);
