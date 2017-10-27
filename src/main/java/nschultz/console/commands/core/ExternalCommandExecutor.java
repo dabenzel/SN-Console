@@ -29,44 +29,46 @@ package nschultz.console.commands.core;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
+import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.MainScene;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
 
-public class CommandExecutor {
+public class ExternalCommandExecutor {
 
-    private final CommandMap commandMap;
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
     private final Window cli;
 
-    public CommandExecutor(CommandMap commandMap, Window cli) {
-        this.commandMap = commandMap;
+    public ExternalCommandExecutor(Window cli) {
         this.cli = cli;
     }
 
-    public void checkAndExecute(String rawInput) {
-        final List<String> arguments = new ArgumentParser(rawInput).parse();
-        final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
-        final Command cmd = commandMap.getCommand(rawInput.split(" ")[0]);
-
-        if (cmd != null) {
-            cmd.execute(arguments, cli);
-        } else {
-            executeExternalCommand(rawInput, outputArea);
+    public void execute(String rawInput) throws IOException {
+        if (rawInput.isEmpty()) {
+            return;
         }
+
+        final File workingDir = WorkingDirectoryProvider.getWorkingDirectory().getPath().toFile();
+        final Process process = Runtime.getRuntime().exec(rawInput, null, workingDir);
+        final InputStream inp = process.getInputStream();
+        final InputStream err = process.getErrorStream();
+        final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
+
+        readStream(inp, outputArea, Color.CYAN);
+        readStream(err, outputArea, Color.RED);
+
     }
 
-    private void executeExternalCommand(String rawInput, TextFlow outputArea) {
-        try {
-            final ExternalCommandExecutor externalCommandExecutor = new ExternalCommandExecutor(cli);
-            externalCommandExecutor.execute(rawInput);
-        } catch (IOException ignore) {
-            if (!rawInput.isEmpty()) {
-                outputArea.getChildren().add(new ColoredText("The command ", Color.RED, false));
-                outputArea.getChildren().add(new ColoredText(rawInput, Color.MAGENTA, false));
-                outputArea.getChildren().add(new ColoredText(" could not be found.", Color.RED, true));
+    private void readStream(InputStream inp, TextFlow outputArea, Color color) throws IOException {
+        for (; ; ) {
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            if (inp.read(buffer) == -1) {
+                break;
             }
+            outputArea.getChildren().add(new ColoredText(new String(buffer), color, true));
         }
     }
 }
