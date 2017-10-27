@@ -76,6 +76,7 @@ public class HelpCommand implements Command {
                 return;
             }
             try {
+                deleteTempFiles();
                 final Path tempHelpFile = Files.createTempFile(null, ".html");
                 tempFiles.add(tempHelpFile);
 
@@ -95,13 +96,17 @@ public class HelpCommand implements Command {
     private void addDeleteTempFilesShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                for (Path tmpFile : tempFiles) {
-                    Files.deleteIfExists(tmpFile);
-                }
+                deleteTempFiles();
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, "Error while trying to delete temp files.");
             }
         }));
+    }
+
+    private void deleteTempFiles() throws IOException {
+        for (Path tmpFile : tempFiles) {
+            Files.deleteIfExists(tmpFile);
+        }
     }
 
     private void transferDataFromInputStream(InputStream inp, Path tempHelpFile) throws IOException {

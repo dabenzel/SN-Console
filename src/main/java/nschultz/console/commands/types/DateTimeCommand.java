@@ -11,9 +11,8 @@ import java.util.List;
 public class DateTimeCommand implements Command {
     @Override
     public void execute(List<String> arguments, Window cli) {
-        String dateTime = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
-
         if (isArgumentCountValid(arguments.size())) {
+            String dateTime = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
             display(cli, dateTime, Color.GREEN, true);
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
