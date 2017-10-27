@@ -53,22 +53,25 @@ public class ExternalCommandExecutor {
 
         final File workingDir = WorkingDirectoryProvider.getWorkingDirectory().getPath().toFile();
         final Process process = Runtime.getRuntime().exec(rawInput, null, workingDir);
-        final InputStream inp = process.getInputStream();
-        final InputStream err = process.getErrorStream();
-        final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
 
-        readStream(inp, outputArea, Color.CYAN);
-        readStream(err, outputArea, Color.RED);
+        final String INPUT_CONTENT = readStream(process.getInputStream());
+        final String ERROR_CONTENT = readStream(process.getErrorStream());
+
+        final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
+        outputArea.getChildren().add(new ColoredText(INPUT_CONTENT, Color.CYAN, true));
+        outputArea.getChildren().add(new ColoredText(ERROR_CONTENT, Color.RED, true));
 
     }
 
-    private void readStream(InputStream inp, TextFlow outputArea, Color color) throws IOException {
+    private String readStream(InputStream inp) throws IOException {
+        final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
         for (; ; ) {
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             if (inp.read(buffer) == -1) {
                 break;
             }
-            outputArea.getChildren().add(new ColoredText(new String(buffer), color, true));
+            sb.append(new String(buffer));
         }
+        return sb.toString();
     }
 }
