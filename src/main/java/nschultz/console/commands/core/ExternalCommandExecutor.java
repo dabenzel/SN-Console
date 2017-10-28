@@ -34,7 +34,6 @@ import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.InputField;
 import nschultz.console.ui.MainScene;
-import nschultz.console.util.DaemonThreadFactory;
 
 import java.io.*;
 import java.util.concurrent.Callable;
