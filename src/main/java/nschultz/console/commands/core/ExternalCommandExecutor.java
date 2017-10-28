@@ -26,19 +26,23 @@
 
 package nschultz.console.commands.core;
 
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
 import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
+import nschultz.console.ui.InputField;
 import nschultz.console.ui.MainScene;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public class ExternalCommandExecutor {
 
-    private static final int DEFAULT_BUFFER_SIZE = 8192;
     private final Window cli;
 
     public ExternalCommandExecutor(Window cli) {
@@ -53,25 +57,45 @@ public class ExternalCommandExecutor {
         final File workingDir = WorkingDirectoryProvider.getWorkingDirectory().getPath().toFile();
         final Process process = Runtime.getRuntime().exec(rawInput, null, workingDir);
 
-        final String INPUT_CONTENT = readStream(process.getInputStream());
-        final String ERROR_CONTENT = readStream(process.getErrorStream());
-
-        final TextFlow outputArea = ((MainScene) cli.getScene()).getOutputArea();
-        outputArea.getChildren().add(new ColoredText(INPUT_CONTENT, Color.CYAN, true));
-        outputArea.getChildren().add(new ColoredText(ERROR_CONTENT, Color.RED, true));
-
+        processStream(process.getInputStream(), Color.CYAN);
+        processStream(process.getErrorStream(), Color.RED);
     }
 
-    private String readStream(InputStream inp) throws IOException {
+    private void processStream(InputStream inp, Color outputColor) throws IOException {
+        final int DEFAULT_BUFFER_SIZE = 8192;
+        final MainScene mainScene = (MainScene) cli.getScene();
+        final TextFlow outputArea = mainScene.getOutputArea();
+        final InputField inputField = (InputField) mainScene.getInputField();
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inp, "CP437"));
-        final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
-        for (; ; ) {
-            final char[] charBuffer = new char[DEFAULT_BUFFER_SIZE];
-            if (bufferedReader.read(charBuffer) == -1) {
-                break;
+
+        final int THREAD_POOL_SIZE = 1;
+        final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE, this::setDaemonTrue);
+
+        inputField.setUsable(false);
+        executorService.submit((Callable<Void>) () -> {
+            for (; ; ) {
+                final char[] charBuffer = new char[DEFAULT_BUFFER_SIZE];
+                if (bufferedReader.read(charBuffer) == -1) {
+                    break;
+                }
+                displayToCommandLine(outputColor, outputArea, charBuffer);
             }
-            sb.append(charBuffer);
-        }
-        return sb.toString();
+            executorService.shutdown();
+            inputField.setUsable(true);
+            return null;
+        });
+    }
+
+    private Thread setDaemonTrue(Runnable runnable) {
+        final Thread thread = new Thread(runnable);
+        thread.setDaemon(true);
+        return thread;
+    }
+
+    private void displayToCommandLine(Color outputColor, TextFlow outputArea, char[] charBuffer) {
+        Platform.runLater(() -> {
+            final ColoredText texToAdd = new ColoredText(new String(charBuffer), outputColor, false);
+            outputArea.getChildren().add(texToAdd);
+        });
     }
 }
