@@ -34,12 +34,12 @@ import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.InputField;
 import nschultz.console.ui.MainScene;
+import nschultz.console.util.DaemonThreadFactory;
 
 import java.io.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public class ExternalCommandExecutor {
 
@@ -69,10 +69,10 @@ public class ExternalCommandExecutor {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inp, "CP437"));
 
         final int THREAD_POOL_SIZE = 1;
-        final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE, this::setDaemonTrue);
+        final ExecutorService execService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
         inputField.setUsable(false);
-        executorService.submit((Callable<Void>) () -> {
+        execService.submit((Callable<Void>) () -> {
             for (; ; ) {
                 final char[] charBuffer = new char[DEFAULT_BUFFER_SIZE];
                 if (bufferedReader.read(charBuffer) == -1) {
@@ -80,16 +80,10 @@ public class ExternalCommandExecutor {
                 }
                 displayToCommandLine(outputColor, outputArea, charBuffer);
             }
-            executorService.shutdown();
+            execService.shutdown();
             inputField.setUsable(true);
             return null;
         });
-    }
-
-    private Thread setDaemonTrue(Runnable runnable) {
-        final Thread thread = new Thread(runnable);
-        thread.setDaemon(true);
-        return thread;
     }
 
     private void displayToCommandLine(Color outputColor, TextFlow outputArea, char[] charBuffer) {
