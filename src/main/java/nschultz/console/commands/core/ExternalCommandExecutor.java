@@ -33,9 +33,8 @@ import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.MainScene;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class ExternalCommandExecutor {
 
@@ -64,13 +63,14 @@ public class ExternalCommandExecutor {
     }
 
     private String readStream(InputStream inp) throws IOException {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inp, "CP437"));
         final StringBuilder sb = new StringBuilder(DEFAULT_BUFFER_SIZE);
         for (; ; ) {
-            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-            if (inp.read(buffer) == -1) {
+            final char[] charBuffer = new char[DEFAULT_BUFFER_SIZE];
+            if (bufferedReader.read(charBuffer) == -1) {
                 break;
             }
-            sb.append(new String(buffer));
+            sb.append(charBuffer);
         }
         return sb.toString();
     }
