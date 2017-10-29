@@ -61,12 +61,12 @@ public class ExternalCommandExecutor {
         final ProcessBuilder pb = new ProcessBuilder(splittedRawInput).directory(workingDir);
         final Process process = pb.start();
 
-        processStream(process.getInputStream(), Color.CYAN);
+        processStream(process.getInputStream(), Color.WHITE);
         processStream(process.getErrorStream(), Color.RED);
     }
 
     private void processStream(InputStream inp, Color outputColor) throws IOException {
-        final int DEFAULT_BUFFER_SIZE = 8192;
+        final int DEFAULT_BUFFER_SIZE = 1024;
         final MainScene mainScene = (MainScene) cli.getScene();
         final TextFlow outputArea = mainScene.getOutputArea();
         final InputField inputField = (InputField) mainScene.getInputField();
