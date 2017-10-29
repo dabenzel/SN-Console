@@ -39,8 +39,9 @@ public final class WorkingDirectory {
     }
 
     public void resolve(Path name) throws FileNotFoundException {
-        if (Files.exists(currentWorkingDirectory.resolve(name))) {
-            currentWorkingDirectory = currentWorkingDirectory.resolve(name);
+        final Path resolvedName = currentWorkingDirectory.resolve(name);
+        if (Files.exists(resolvedName) && Files.isDirectory(resolvedName)) {
+            currentWorkingDirectory = resolvedName;
         } else {
             throw new FileNotFoundException("Directory does not exist.");
         }
