@@ -34,6 +34,7 @@ import nschultz.console.io.WorkingDirectoryProvider;
 import nschultz.console.ui.ColoredText;
 import nschultz.console.ui.InputField;
 import nschultz.console.ui.MainScene;
+import nschultz.console.util.DaemonThreadFactory;
 
 import java.io.*;
 import java.util.concurrent.Callable;
@@ -68,7 +69,7 @@ public class ExternalCommandExecutor {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inp, "CP437"));
 
         final int THREAD_POOL_SIZE = 1;
-        final ExecutorService execService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+        final ExecutorService execService = Executors.newFixedThreadPool(THREAD_POOL_SIZE, new DaemonThreadFactory());
 
         inputField.setUsable(false);
         execService.submit((Callable<Void>) () -> {
