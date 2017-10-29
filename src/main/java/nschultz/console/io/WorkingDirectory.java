@@ -42,7 +42,7 @@ public final class WorkingDirectory {
         if (Files.exists(currentWorkingDirectory.resolve(name))) {
             currentWorkingDirectory = currentWorkingDirectory.resolve(name);
         } else {
-            throw new FileNotFoundException("file does not exist.");
+            throw new FileNotFoundException("Directory does not exist.");
         }
     }
 

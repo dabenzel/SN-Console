@@ -54,8 +54,8 @@ public class NavigateToCommand implements Command {
                 workingDirectory.resolve(name);
                 display(cli, "Navigated to ", Color.GREEN, false);
                 display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
-            } catch (FileNotFoundException ignore) {
-                display(cli, "Directory does not exist.", Color.RED, true);
+            } catch (FileNotFoundException ex) {
+                display(cli, ex.getMessage(), Color.RED, true);
             }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
