@@ -37,6 +37,8 @@ import nschultz.console.ui.MainScene;
 import nschultz.console.util.DaemonThreadFactory;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,7 +57,9 @@ public class ExternalCommandExecutor {
         }
 
         final File workingDir = WorkingDirectoryProvider.getWorkingDirectory().getPath().toFile();
-        final Process process = Runtime.getRuntime().exec(rawInput, null, workingDir);
+        final List<String> splittedRawInput = Arrays.asList(rawInput.split(" "));
+        final ProcessBuilder pb = new ProcessBuilder(splittedRawInput).directory(workingDir);
+        final Process process = pb.start();
 
         processStream(process.getInputStream(), Color.CYAN);
         processStream(process.getErrorStream(), Color.RED);
