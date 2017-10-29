@@ -46,6 +46,12 @@ public final class WorkingDirectory {
         }
     }
 
+    public void navigateOneDirectoryBackwards() {
+        if (currentWorkingDirectory.getParent() != null) {
+            currentWorkingDirectory = currentWorkingDirectory.getParent().toAbsolutePath();
+        }
+    }
+
     public Path getPath() {
         return currentWorkingDirectory;
     }

@@ -50,12 +50,19 @@ public class NavigateToCommand implements Command {
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
             Path name = Paths.get(arguments.get(DIR_PARM_INDEX));
-            try {
-                workingDirectory.resolve(name);
+
+            if (name.toString().equals("..")) {
+                workingDirectory.navigateOneDirectoryBackwards();
                 display(cli, "Navigated to ", Color.GREEN, false);
                 display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
-            } catch (FileNotFoundException ex) {
-                display(cli, ex.getMessage(), Color.RED, true);
+            } else {
+                try {
+                    workingDirectory.resolve(name);
+                    display(cli, "Navigated to ", Color.GREEN, false);
+                    display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+                } catch (FileNotFoundException ex) {
+                    display(cli, ex.getMessage(), Color.RED, true);
+                }
             }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
