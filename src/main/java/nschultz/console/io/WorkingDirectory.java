@@ -26,6 +26,8 @@
 
 package nschultz.console.io;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class WorkingDirectory {
@@ -36,8 +38,12 @@ public final class WorkingDirectory {
         this.currentWorkingDirectory = currentWorkingDirectory;
     }
 
-    public void setPath(Path currentWorkingDirectory) {
-        this.currentWorkingDirectory = currentWorkingDirectory;
+    public void resolve(Path name) throws FileNotFoundException {
+        if (Files.exists(currentWorkingDirectory.resolve(name))) {
+            currentWorkingDirectory = currentWorkingDirectory.resolve(name);
+        } else {
+            throw new FileNotFoundException("file does not exist.");
+        }
     }
 
     public Path getPath() {

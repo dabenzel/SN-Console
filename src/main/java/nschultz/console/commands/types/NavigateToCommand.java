@@ -31,6 +31,7 @@ import javafx.stage.Window;
 import nschultz.console.commands.core.Command;
 import nschultz.console.io.WorkingDirectory;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,6 +39,7 @@ import java.util.List;
 
 public class NavigateToCommand implements Command {
 
+    private static final int DIR_PARM_INDEX = 0;
     private WorkingDirectory workingDirectory;
 
     public NavigateToCommand(WorkingDirectory workingDirectory) {
@@ -47,13 +49,13 @@ public class NavigateToCommand implements Command {
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
-            Path dir = Paths.get(arguments.get(0));
-            if (Files.notExists(dir)) {
-                display(cli, "Directory does not exist.", Color.RED, true);
-            } else {
-                workingDirectory.setPath(dir);
+            Path name = Paths.get(arguments.get(DIR_PARM_INDEX));
+            try {
+                workingDirectory.resolve(name);
                 display(cli, "Navigated to ", Color.GREEN, false);
                 display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+            } catch (FileNotFoundException ignore) {
+                display(cli, "Directory does not exist.", Color.RED, true);
             }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
