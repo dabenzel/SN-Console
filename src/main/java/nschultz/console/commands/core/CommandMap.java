@@ -41,24 +41,23 @@ public class CommandMap {
     private final Map<String, Command> availableCommands = new TreeMap<>();
 
     public CommandMap() {
-        final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
-
         final Command exitCommand = new ExitCommand();
         final Command helpCommand = new HelpCommand(this);
         final Command sayCommand = new SayCommand();
         final Command clearCommand = new ClearCommand();
         final Command osCommand = new OperatingSystemCommand();
         final Command versionCommand = new VersionCommand();
-        final Command navigateCommand = new NavigateCommand(workingDirectory);
-        final Command navigateToCommand = new NavigateToCommand(workingDirectory);
-        final Command readDirCommand = new ReadDirectoryCommand(workingDirectory);
+        final Command navigateCommand = new NavigateCommand();
+        final Command navigateToCommand = new NavigateToCommand();
+        final Command readDirCommand = new ReadDirectoryCommand();
         final Command ipCommand = new IPCommand();
         final Command reachCommand = new ReachCommand();
-        final Command createdDirCommand = new CreateDirectoryCommand(workingDirectory);
+        final Command createDirCommand = new CreateDirectoryCommand();
         final Command dateTimeCommand = new DateTimeCommand();
         final Command resolutionCommand = new ResolutionCommand();
         final Command browseCommand = new OpenCommand();
         final Command userNameCommand = new UserNameCommand();
+        final Command createFileCommand = new CreateFileCommand();
 
         availableCommands.put(exitCommand.getName(), exitCommand);
         availableCommands.put(helpCommand.getName(), helpCommand);
@@ -71,11 +70,12 @@ public class CommandMap {
         availableCommands.put(readDirCommand.getName(), readDirCommand);
         availableCommands.put(ipCommand.getName(), ipCommand);
         availableCommands.put(reachCommand.getName(), reachCommand);
-        availableCommands.put(createdDirCommand.getName(), createdDirCommand);
+        availableCommands.put(createDirCommand.getName(), createDirCommand);
         availableCommands.put(dateTimeCommand.getName(), dateTimeCommand);
         availableCommands.put(resolutionCommand.getName(), resolutionCommand);
         availableCommands.put(browseCommand.getName(), browseCommand);
         availableCommands.put(userNameCommand.getName(), userNameCommand);
+        availableCommands.put(createFileCommand.getName(), createFileCommand);
     }
 
     public Command getCommand(String name) {

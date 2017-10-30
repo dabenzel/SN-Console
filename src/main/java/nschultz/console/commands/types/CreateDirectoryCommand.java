@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import nschultz.console.commands.core.Command;
 import nschultz.console.io.WorkingDirectory;
+import nschultz.console.io.WorkingDirectoryProvider;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,11 +43,6 @@ public class CreateDirectoryCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(CreateDirectoryCommand.class.getName());
     private static final int DIRECTORY_PARM_INDEX = 0;
-    private final WorkingDirectory workingDirectory;
-
-    public CreateDirectoryCommand(WorkingDirectory workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
 
     @Override
     public void execute(List<String> arguments, Window cli) {
@@ -54,6 +50,7 @@ public class CreateDirectoryCommand implements Command {
 
             try {
                 final String DIR_NAME = arguments.get(DIRECTORY_PARM_INDEX);
+                final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
                 Path newDir = Files.createDirectory(workingDirectory.getPath().resolve(DIR_NAME));
                 display(cli, "Created directory ", Color.GREEN, false);
                 display(cli, newDir.getFileName().toString(), Color.MAGENTA, false);

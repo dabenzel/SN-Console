@@ -30,20 +30,16 @@ import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import nschultz.console.commands.core.Command;
 import nschultz.console.io.WorkingDirectory;
+import nschultz.console.io.WorkingDirectoryProvider;
 
 import java.util.List;
 
 public class NavigateCommand implements Command {
 
-    private WorkingDirectory workingDirectory;
-
-    public NavigateCommand(WorkingDirectory workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
-
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
+            final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
             display(cli, workingDirectory.getPath().toString(), Color.GREEN, true);
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());

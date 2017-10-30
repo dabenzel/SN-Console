@@ -32,34 +32,32 @@ import nschultz.console.commands.core.Command;
 import nschultz.console.io.WorkingDirectory;
 import nschultz.console.io.WorkingDirectoryProvider;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class NavigateToCommand implements Command {
+public class CreateFileCommand implements Command {
 
-    private static final int DIR_PARM_INDEX = 0;
+    private static final Logger logger = Logger.getLogger(CreateFileCommand.class.getName());
+
+    private static final int NAME_PARM_INDEX = 0;
 
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
-            final Path name = Paths.get(arguments.get(DIR_PARM_INDEX));
             final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
-
-            if (name.toString().equals("..")) {
-                workingDirectory.navigateOneDirectoryBackwards();
-                display(cli, "Navigated to ", Color.GREEN, false);
-                display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
-            } else {
-                try {
-                    workingDirectory.resolve(name);
-                    display(cli, "Navigated to ", Color.GREEN, false);
-                    display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
-                } catch (FileNotFoundException ex) {
-                    display(cli, ex.getMessage(), Color.RED, true);
-                }
+            final String fileName = arguments.get(NAME_PARM_INDEX);
+            try {
+                Files.createFile(workingDirectory.getPath().resolve(Paths.get(fileName)));
+            } catch (FileAlreadyExistsException ex) {
+                display(cli, "Specified file already exists.", Color.RED, true);
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Error while creating file.", ex);
+                display(cli, "Error while creating file: " + ex.getMessage(), Color.RED, true);
             }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
@@ -68,12 +66,12 @@ public class NavigateToCommand implements Command {
 
     @Override
     public String getName() {
-        return "navto";
+        return "wfile";
     }
 
     @Override
     public String getInfo() {
-        return "Navigates to specified directory.";
+        return "Creates a file in the current working directory.";
     }
 
     @Override
@@ -83,6 +81,6 @@ public class NavigateToCommand implements Command {
 
     @Override
     public int getMinArgumentCount() {
-        return 0;
+        return 1;
     }
 }

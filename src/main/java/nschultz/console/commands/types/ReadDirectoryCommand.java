@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Window;
 import nschultz.console.commands.core.Command;
 import nschultz.console.io.WorkingDirectory;
+import nschultz.console.io.WorkingDirectoryProvider;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -43,18 +44,13 @@ import java.util.logging.Logger;
 public class ReadDirectoryCommand implements Command {
 
     private static final Logger logger = Logger.getLogger(ReadDirectoryCommand.class.getName());
-    private WorkingDirectory workingDirectory;
-
-    public ReadDirectoryCommand(WorkingDirectory workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
 
     @Override
     public void execute(List<String> arguments, Window cli) {
         if (isArgumentCountValid(arguments.size())) {
             try {
-                try (final DirectoryStream<Path> dirStream = Files.newDirectoryStream(
-                        workingDirectory.getPath())) {
+                final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
+                try (final DirectoryStream<Path> dirStream = Files.newDirectoryStream(workingDirectory.getPath())) {
 
                     final List<Path> files = new ArrayList<>();
                     dirStream.forEach(files::add);
@@ -84,9 +80,13 @@ public class ReadDirectoryCommand implements Command {
     }
 
     private void displayFileCount(Window cli, List<Path> files) {
-        display(cli, "Total of ", Color.GREEN, false);
-        display(cli, String.valueOf(files.size()), Color.YELLOW, false);
-        display(cli, " files counted: ", Color.GREEN, true);
+        if (files.isEmpty()) {
+            display(cli, "Directory is empty. ", Color.ORANGE, true);
+        } else {
+            display(cli, "Total of ", Color.GREEN, false);
+            display(cli, String.valueOf(files.size()), Color.YELLOW, false);
+            display(cli, " files counted: ", Color.GREEN, true);
+        }
     }
 
     @Override
