@@ -58,6 +58,7 @@ public class CommandMap {
         final Command browseCommand = new OpenCommand();
         final Command userNameCommand = new UserNameCommand();
         final Command createFileCommand = new CreateFileCommand();
+        final Command readFileCommand = new ReadFileCommand();
 
         availableCommands.put(exitCommand.getName(), exitCommand);
         availableCommands.put(helpCommand.getName(), helpCommand);
@@ -76,6 +77,7 @@ public class CommandMap {
         availableCommands.put(browseCommand.getName(), browseCommand);
         availableCommands.put(userNameCommand.getName(), userNameCommand);
         availableCommands.put(createFileCommand.getName(), createFileCommand);
+        availableCommands.put(readFileCommand.getName(), readFileCommand);
     }
 
     public Command getCommand(String name) {
