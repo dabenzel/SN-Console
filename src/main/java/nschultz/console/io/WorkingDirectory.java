@@ -29,6 +29,7 @@ package nschultz.console.io;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public final class WorkingDirectory {
 
@@ -47,10 +48,18 @@ public final class WorkingDirectory {
         }
     }
 
-    public void navigateOneDirectoryBackwards() {
+    public void goOneDirectoryBackwards() {
         if (currentWorkingDirectory.getParent() != null) {
             currentWorkingDirectory = currentWorkingDirectory.getParent().toAbsolutePath();
         }
+    }
+
+    public void goStartingDirectory() {
+        currentWorkingDirectory = Paths.get("").toAbsolutePath();
+    }
+
+    public void goUserDirectory() {
+        currentWorkingDirectory = Paths.get(System.getProperty("user.home"));
     }
 
     public Path getPath() {

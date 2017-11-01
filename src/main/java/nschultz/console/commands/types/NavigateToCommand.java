@@ -33,7 +33,6 @@ import nschultz.console.io.WorkingDirectory;
 import nschultz.console.io.WorkingDirectoryProvider;
 
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -48,8 +47,16 @@ public class NavigateToCommand implements Command {
             final Path name = Paths.get(arguments.get(DIR_PARM_INDEX));
             final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
 
-            if (name.toString().equals("..")) {
-                workingDirectory.navigateOneDirectoryBackwards();
+            if (name.toString().equals(".")) {
+                workingDirectory.goStartingDirectory();
+                display(cli, "Navigated to ", Color.GREEN, false);
+                display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+            } else if (name.toString().equals("..")) {
+                workingDirectory.goOneDirectoryBackwards();
+                display(cli, "Navigated to ", Color.GREEN, false);
+                display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+            } else if (name.toString().equals("~")) {
+                workingDirectory.goUserDirectory();
                 display(cli, "Navigated to ", Color.GREEN, false);
                 display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
             } else {
