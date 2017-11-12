@@ -90,6 +90,6 @@ public class NavigateToCommand implements Command {
 
     @Override
     public int getMinArgumentCount() {
-        return 0;
+        return 1;
     }
 }
