@@ -27,10 +27,7 @@
 package nschultz.console.commands.core;
 
 import nschultz.console.commands.types.*;
-import nschultz.console.io.WorkingDirectory;
-import nschultz.console.io.WorkingDirectoryProvider;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +44,7 @@ public class CommandMap {
         final Command clearCommand = new ClearCommand();
         final Command osCommand = new OperatingSystemCommand();
         final Command versionCommand = new VersionCommand();
-        final Command navigateCommand = new NavigateCommand();
-        final Command navigateToCommand = new NavigateToCommand();
+        final Command changeDirectoryCommand = new ChangeDirectoryCommand();
         final Command readDirCommand = new ReadDirectoryCommand();
         final Command ipCommand = new IPCommand();
         final Command reachCommand = new ReachCommand();
@@ -66,8 +62,7 @@ public class CommandMap {
         availableCommands.put(clearCommand.getName(), clearCommand);
         availableCommands.put(osCommand.getName(), osCommand);
         availableCommands.put(versionCommand.getName(), versionCommand);
-        availableCommands.put(navigateCommand.getName(), navigateCommand);
-        availableCommands.put(navigateToCommand.getName(), navigateToCommand);
+        availableCommands.put(changeDirectoryCommand.getName(), changeDirectoryCommand);
         availableCommands.put(readDirCommand.getName(), readDirCommand);
         availableCommands.put(ipCommand.getName(), ipCommand);
         availableCommands.put(reachCommand.getName(), reachCommand);

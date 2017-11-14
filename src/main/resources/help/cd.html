@@ -28,21 +28,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nav</title>
+    <title>Navto</title>
 </head>
 <body>
 <h2>Name</h2>
-<p><b>nav</b> - output current working directory</p>
+<p><b>cd</b> - changes the working directory</p>
 
 <h2>Description</h2>
-<p>The nav command displays the current working directory. The current working directory is the
-    location where commands like <b>rdir</b> or <b>wdir</b> get executed in.</p>
+<p>The cd command changes the current working directory.</p>
+<p>This command can be used by either specifying the absolute path of the directory to
+    change the working directory to, just providing the name (this only works if the directory is in the current
+    working directory) or using the '..' operator which will go back one directory.</p>
 
 <h2>Syntax</h2>
-<pre>nav</pre>
+<pre>cd</pre>
+<pre>cd [<'path'>]</pre>
+<pre>cd [.]</pre>
+<pre>cd [..]</pre>
+<pre>cd [~]</pre>
 
 <h2>Arguments</h2>
-<p><i>There are no arguments available for this command.</i></p>
+<b>[None]</b>
+<p>Displays the current working directory</p>
+
+<b><'path'></b>
+<p>The path of the directory.</p>
+
+<b>[.]</b>
+<p>Use this argument to go back to the directory where the SN-Console has been started.</p>
+
+<b>[..]</b>
+<p>Use this argument to go back one directory.</p>
+
+<b>[~]</b>
+<p>Use this argument to go to the user directory.</p>
 
 </body>
 </html>

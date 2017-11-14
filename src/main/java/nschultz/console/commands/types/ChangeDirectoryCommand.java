@@ -32,15 +32,48 @@ import nschultz.console.commands.core.Command;
 import nschultz.console.io.WorkingDirectory;
 import nschultz.console.io.WorkingDirectoryProvider;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
-public class NavigateCommand implements Command {
+public class ChangeDirectoryCommand implements Command {
+
+    private static final int DIR_PARM_INDEX = 0;
 
     @Override
     public void execute(List<String> arguments, Window cli) {
+        final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
+
         if (isArgumentCountValid(arguments.size())) {
-            final WorkingDirectory workingDirectory = WorkingDirectoryProvider.getWorkingDirectory();
-            display(cli, workingDirectory.getPath().toString(), Color.GREEN, true);
+            if (!arguments.isEmpty()) {
+                final Path name = Paths.get(arguments.get(DIR_PARM_INDEX));
+
+                if (name.toString().equals(".")) {
+                    workingDirectory.goStartingDirectory();
+                    display(cli, "Navigated to ", Color.GREEN, false);
+                    display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+                } else if (name.toString().equals("..")) {
+                    workingDirectory.goOneDirectoryBackwards();
+                    display(cli, "Navigated to ", Color.GREEN, false);
+                    display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+                } else if (name.toString().equals("~")) {
+                    workingDirectory.goUserDirectory();
+                    display(cli, "Navigated to ", Color.GREEN, false);
+                    display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+                } else {
+                    try {
+                        workingDirectory.resolve(name);
+                        display(cli, "Navigated to ", Color.GREEN, false);
+                        display(cli, workingDirectory.getPath().toString(), Color.YELLOW, true);
+                    } catch (FileNotFoundException ex) {
+                        display(cli, ex.getMessage(), Color.RED, true);
+                    }
+                }
+            } else {
+                display(cli, workingDirectory.getPath().toString(), Color.GREEN, true);
+
+            }
         } else {
             displayInvalidArgumentCount(cli, getName(), getMinArgumentCount(), getMaxArgumentCount());
         }
@@ -48,17 +81,17 @@ public class NavigateCommand implements Command {
 
     @Override
     public String getName() {
-        return "nav";
+        return "cd";
     }
 
     @Override
     public String getInfo() {
-        return "Displays the current working directory.";
+        return "Changes the directory.";
     }
 
     @Override
     public int getMaxArgumentCount() {
-        return 0;
+        return 1;
     }
 
     @Override
