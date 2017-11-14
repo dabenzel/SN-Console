@@ -33,7 +33,7 @@
     <groupId>nschultz.console</groupId>
     <artifactId>SN-Console</artifactId>
     <!-- Change version here -->
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <!-- Change version here -->
 
     <build>
